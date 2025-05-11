@@ -18,7 +18,7 @@ This gave us a more reliable, structured dataset and each row represented a comp
 
 The reviews all had many different variations. Hence, the next step was to standardize and clean this text, making it easier to analyze. We wrote a custom preprocessing function using two natural language processing libraries: SpaCy and NLTK.
 
-The function  def preprocess_text(text) included code to:
+The function  ```def preprocess_text(text)``` included code to:
 - Lowercase all text: This reduced variability. For example, "Food" and "food" were treated as the same word.
 - Removed URLs and special characters: These don’t contribute to the meaning of the review in most cases, so removing them made the text cleaner and more focused on the actual content of the review.
 - Tokenized the text: This broke each review into individual words (called tokens).
@@ -80,6 +80,7 @@ A Dictionary object is created using the tokenized reviews from the df['tokens']
 - We also filtered the dictionary to remove words that either occur too rarely (in fewer than 5 reviews) or are too common (in more than 50% of reviews). Words that are too rare may not be meaningful for topic discovery, while too common words don't provide much information about specific topics. By removing these words, the model focuses on the most significant and distinctive terms.
 
 Using the doc2bow method, we convert each review into a BoW format, which is a list of word IDs and their frequencies. The corpus is a list of these BoW representations, one for each review. 
+
 We trained the LDA model using the dictionary and corpus we created:
 ```lda_model = LdaModel(corpus=corpus,id2word=dictionary, num_topics=NUM_TOPICS, passes=10, random_state=42, per_word_topics=True)```
 
@@ -110,7 +111,9 @@ This system was already implemented as part of our TF-IDF vectorization, but we 
 While content-based recommenders rely on textual data, collaborative filtering models use past user behavior to uncover patterns. The idea is that users who rate places similarly probably share similar tastes. If User A likes Bars X and Y, and User B likes X and Z, the system could recommend Y to User B. For this part, we used the Surprise library to implement a collaborative filtering system using Singular Value Decomposition (SVD). This method performs SVD on a rating matrix and then uses stochastic gradient descent within the Surprise library to optimize the resulting factor matrices. The model can predict how a user would rate a specific bar by computing the dot product of its latent feature vectors.
 
 We began by loading the data into a format compatible with Surprise:
+
 ```reader = Reader(rating_scale=(1, 5)) ```
+
 ```data = Dataset.load_from_df(df_filtered[['reviewer_id', 'place_id', 'rating_x']], reader) ```
 
 The Reader object defines the 5-star scale format that Google reviews use, and load_from_df converts the DataFrame into a format that Surprise can use. The model is split into train and test sets before the trainset is fitted to an SVD model. We then evaluated our model’s performance on the testset using the Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE). We ended with an RMSE of 1.1538, and an MAE of 0.8524.	
