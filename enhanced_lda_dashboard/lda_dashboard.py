@@ -50,24 +50,6 @@ app.layout = dbc.Container([
     ])
 ], fluid=True)
 
-app = Dash(__name__)
-
-app.layout = html.Div([
-    html.H2("Manhattan Bars Review Dashboard", style={'textAlign': 'center'}),
-
-    dcc.Dropdown(
-        id='place-dropdown',
-        options=[{'label': name, 'value': name} for name in sorted(df['place_name'].dropna().unique())],
-        placeholder="Select a Bar"
-    ),
-
-    dcc.Graph(id='topic-counts'),
-    dcc.Graph(id='avg-rating-topic'),
-    dcc.Graph(id='rating-vs-topic'),
-
-    html.Div(id='recommender-output', style={'marginTop': 30, 'fontSize': 16})
-])
-
 @app.callback(
     Output('topic-counts', 'figure'),
     Output('avg-rating-topic', 'figure'),
