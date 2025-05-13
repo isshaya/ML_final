@@ -4,13 +4,13 @@ from dash import Dash, dcc, html, Input, Output
 import plotly.express as px
 import dash_bootstrap_components as dbc
 
-# Load main data and recommender files
+# Load data and similarity matrix
 df = pd.read_csv("lda_labeled_reviews.csv")
 df = df.rename(columns={'lda_dominant_topic': 'dominant_topic'})
 cosine_sim = np.load("cosine_sim.npy")
 indices = pd.read_pickle("place_indices.pkl")
 
-# Recommendation function
+# Recommender function
 def recommend_places(place_name, cosine_sim=cosine_sim, indices=indices, df=df):
     if place_name not in indices:
         return ["(No similar bars found)"]
@@ -35,28 +35,24 @@ app.layout = dbc.Container([
         ))
     ]),
 
-    html.Hr(),
-
-    html.Div([
-        html.H3("📊 Review Distribution by Topic", className="mt-4"),
-        dcc.Graph(id='topic-counts')
-    ], className="mb-5"),
-
-    html.Div([
-        html.H3("⭐ Average Rating by Topic", className="mt-4"),
-        dcc.Graph(id='avg-rating-topic')
-    ], className="mb-5"),
-
-    html.Div([
-        html.H3("🎯 Rating vs Topic Index", className="mt-4"),
-        dcc.Graph(id='rating-vs-topic')
-    ], className="mb-5"),
-
-    html.Div([
-        html.H3("🤝 Recommended Similar Bars", className="mt-4"),
-        html.Div(id='recommender-output', className="alert alert-info", style={'fontSize': 16})
-    ], className="mb-5")
-
+    dcc.Tabs([
+        dcc.Tab(label="📊 Topic Distribution", children=[
+            html.Br(),
+            dcc.Graph(id='topic-counts')
+        ]),
+        dcc.Tab(label="⭐ Average Ratings", children=[
+            html.Br(),
+            dcc.Graph(id='avg-rating-topic')
+        ]),
+        dcc.Tab(label="🎯 Rating vs Topic", children=[
+            html.Br(),
+            dcc.Graph(id='rating-vs-topic')
+        ]),
+        dcc.Tab(label="🤝 Similar Bars", children=[
+            html.Br(),
+            html.Div(id='recommender-output', className="alert alert-info", style={'fontSize': 16})
+        ])
+    ])
 ], fluid=True)
 
 @app.callback(
