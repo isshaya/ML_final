@@ -26,50 +26,37 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.layout = dbc.Container([
     html.H1("🍸 Manhattan Bars Review Dashboard", className="text-center my-4"),
 
-    # Section: Bar Selection
-    dbc.Card([
-        dbc.CardHeader(html.H4("🔍 Select a Bar")),
-        dbc.CardBody([
-            dcc.Dropdown(
-                id='place-dropdown',
-                options=[{'label': name, 'value': name} for name in sorted(df['place_name'].dropna().unique())],
-                placeholder="Choose a bar to analyze",
-                className="mb-2"
-            )
-        ])
-    ], className="mb-4"),
+    dbc.Row([
+        dbc.Col(dcc.Dropdown(
+            id='place-dropdown',
+            options=[{'label': name, 'value': name} for name in sorted(df['place_name'].dropna().unique())],
+            placeholder="🔍 Select a Bar",
+            className="mb-4"
+        ))
+    ]),
 
-    # Section: Topic Distribution
-    dbc.Card([
-        dbc.CardHeader(html.H4("📊 Review Distribution by Topic")),
-        dbc.CardBody([
-            dcc.Graph(id='topic-counts')
-        ])
-    ], className="mb-4"),
+    html.Hr(),
 
-    # Section: Average Ratings
-    dbc.Card([
-        dbc.CardHeader(html.H4("⭐ Average Rating by Topic")),
-        dbc.CardBody([
-            dcc.Graph(id='avg-rating-topic')
-        ])
-    ], className="mb-4"),
+    html.Div([
+        html.H3("📊 Review Distribution by Topic", className="mt-4"),
+        dcc.Graph(id='topic-counts')
+    ], className="mb-5"),
 
-    # Section: Topic vs. Rating Scatter
-    dbc.Card([
-        dbc.CardHeader(html.H4("🎯 Rating vs Topic Index")),
-        dbc.CardBody([
-            dcc.Graph(id='rating-vs-topic')
-        ])
-    ], className="mb-4"),
+    html.Div([
+        html.H3("⭐ Average Rating by Topic", className="mt-4"),
+        dcc.Graph(id='avg-rating-topic')
+    ], className="mb-5"),
 
-    # Section: Recommender Output
-    dbc.Card([
-        dbc.CardHeader(html.H4("🤝 Recommended Similar Bars")),
-        dbc.CardBody([
-            html.Div(id='recommender-output', className="alert alert-info", style={'fontSize': 16})
-        ])
-    ])
+    html.Div([
+        html.H3("🎯 Rating vs Topic Index", className="mt-4"),
+        dcc.Graph(id='rating-vs-topic')
+    ], className="mb-5"),
+
+    html.Div([
+        html.H3("🤝 Recommended Similar Bars", className="mt-4"),
+        html.Div(id='recommender-output', className="alert alert-info", style={'fontSize': 16})
+    ], className="mb-5")
+
 ], fluid=True)
 
 @app.callback(
