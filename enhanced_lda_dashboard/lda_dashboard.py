@@ -20,31 +20,55 @@ def recommend_places(place_name, cosine_sim=cosine_sim, indices=indices, df=df):
     place_indices = [i[0] for i in sim_scores]
     return df['place_name'].drop_duplicates().iloc[place_indices].tolist()
 
-# Initialize Dash app with Bootstrap theme
+# Initialize Dash app
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 app.layout = dbc.Container([
     html.H1("🍸 Manhattan Bars Review Dashboard", className="text-center my-4"),
 
-    dbc.Row([
-        dbc.Col([
+    # Section: Bar Selection
+    dbc.Card([
+        dbc.CardHeader(html.H4("🔍 Select a Bar")),
+        dbc.CardBody([
             dcc.Dropdown(
                 id='place-dropdown',
                 options=[{'label': name, 'value': name} for name in sorted(df['place_name'].dropna().unique())],
-                placeholder="🔍 Select a Bar",
-                className="mb-4"
+                placeholder="Choose a bar to analyze",
+                className="mb-2"
             )
         ])
-    ]),
-
-    dbc.Row([
-        dbc.Col(dcc.Graph(id='topic-counts'), md=4),
-        dbc.Col(dcc.Graph(id='avg-rating-topic'), md=4),
-        dbc.Col(dcc.Graph(id='rating-vs-topic'), md=4),
     ], className="mb-4"),
 
-    dbc.Row([
-        dbc.Col(html.Div(id='recommender-output', className="alert alert-info", style={'fontSize': 16}))
+    # Section: Topic Distribution
+    dbc.Card([
+        dbc.CardHeader(html.H4("📊 Review Distribution by Topic")),
+        dbc.CardBody([
+            dcc.Graph(id='topic-counts')
+        ])
+    ], className="mb-4"),
+
+    # Section: Average Ratings
+    dbc.Card([
+        dbc.CardHeader(html.H4("⭐ Average Rating by Topic")),
+        dbc.CardBody([
+            dcc.Graph(id='avg-rating-topic')
+        ])
+    ], className="mb-4"),
+
+    # Section: Topic vs. Rating Scatter
+    dbc.Card([
+        dbc.CardHeader(html.H4("🎯 Rating vs Topic Index")),
+        dbc.CardBody([
+            dcc.Graph(id='rating-vs-topic')
+        ])
+    ], className="mb-4"),
+
+    # Section: Recommender Output
+    dbc.Card([
+        dbc.CardHeader(html.H4("🤝 Recommended Similar Bars")),
+        dbc.CardBody([
+            html.Div(id='recommender-output', className="alert alert-info", style={'fontSize': 16})
+        ])
     ])
 ], fluid=True)
 
@@ -88,7 +112,7 @@ def update_graphs(selected_place):
 
     if selected_place:
         recs = recommend_places(selected_place)
-        rec_text = "### Recommended bars similar to **{}**:\n- ".format(selected_place) + "\n- ".join(recs)
+        rec_text = "### Recommended bars similar to **{}**:\n- ".format(selected_place) + "\\n- ".join(recs)
     else:
         rec_text = "Select a bar from the dropdown to see similar places."
 
