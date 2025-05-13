@@ -9,6 +9,8 @@ df = pd.read_csv("lda_labeled_reviews.csv")
 df = df.rename(columns={'lda_dominant_topic': 'dominant_topic'})
 cosine_sim = np.load("cosine_sim.npy")
 indices = pd.read_pickle("place_indices.pkl")
+coord_cache = pd.read_csv("bar_coordinates.csv")
+df = pd.merge(df, coord_cache, on='place_name', how='left')
 
 # Optional: fake coordinates for demo (if not present)
 if 'latitude' not in df.columns or 'longitude' not in df.columns:
