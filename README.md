@@ -162,10 +162,13 @@ For new users without any review history, we implemented a fallback recommendati
 
 
 To evaluate the performance of our recommendation systems, we employed both quantitative and qualitative strategies. We compared recommendation overlaps across TF-IDF, SVD, Hybrid to evaluate consistency and presented this analysis in a heatmap. If there was no overlaps, that would imply our recommender systems were lacking. The resulting heatmaps shows that the SVD recommender(Top-N) and Hybrid have a stronger correlation than the TF-IDF recommender which is what we want. If we had future time, we would aim to get each cell in the heatmap to a 5. Note: we did not include the cold-start recommender in the heatmap because it is a fixed result.
+![4ed6d033-3f07-4dde-afcf-d7a0232900d9](https://github.com/user-attachments/assets/177f3063-3497-4367-a40a-83917ebca5fe)
+
 
 To better understand how accurately our collaborative filtering model predicts recommendations for individual users, we computed Precision@5 and Recall@5 for each user in our test set. Precision@5 measures the proportion of the top 5 recommended bars that a user actually rated positively (≥ 3.5 stars). Recall@5 measures how many of a user’s actual liked bars were retrieved in those top 5 recommendations. To visualize this, we plotted a bar chart comparing Precision and Recall scores for each user. This helped us quickly identify which users received highly accurate recommendations and where the model might be underperforming.
 This plot highlights that while most users had solid precision, the recall varied depending on how many relevant bars the user had rated in the test set. This also reflects the real-world challenge of recommending new bars when only limited user data is available.
- 
+ ![bc9cb552-ac33-4b0d-a705-59f58b168814](https://github.com/user-attachments/assets/8d9b8b41-9529-47cf-b887-9a5f9f71f633)
+
 
 
 # Task 3: Dashboard
