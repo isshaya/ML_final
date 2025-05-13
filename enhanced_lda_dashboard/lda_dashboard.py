@@ -1,8 +1,8 @@
-
 import pandas as pd
 import numpy as np
 from dash import Dash, dcc, html, Input, Output
 import plotly.express as px
+import dash_bootstrap_components as dbc
 
 # Load main data and recommender files
 df = pd.read_csv("lda_labeled_reviews.csv")
@@ -20,9 +20,7 @@ def recommend_places(place_name, cosine_sim=cosine_sim, indices=indices, df=df):
     place_indices = [i[0] for i in sim_scores]
     return df['place_name'].drop_duplicates().iloc[place_indices].tolist()
 
-# Dash App
-import dash_bootstrap_components as dbc
-
+# Initialize Dash app with Bootstrap theme
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 app.layout = dbc.Container([
@@ -71,27 +69,31 @@ def update_graphs(selected_place):
         x='dominant_topic', y='count',
         title='Review Count by Topic'
     )
+    fig1.update_layout(template="plotly_white", margin=dict(l=10, r=10, t=40, b=30))
 
+    avg_rating = filtered.groupby('dominant_topic')['rating_x'].mean().reset_index()
     fig2 = px.bar(
-        filtered.groupby('dominant_topic')['rating_x'].mean().reset_index(),
+        avg_rating,
         x='dominant_topic', y='rating_x',
         title='Average Rating by Topic'
     )
+    fig2.update_layout(template="plotly_white", margin=dict(l=10, r=10, t=40, b=30))
 
     fig3 = px.scatter(
         filtered, x='dominant_topic', y='rating_x', color='place_name',
         hover_data=['review_text', 'topic_keywords'],
         title='Rating vs Topic'
     )
+    fig3.update_layout(template="plotly_white", height=350, margin=dict(l=10, r=10, t=40, b=30))
 
     if selected_place:
         recs = recommend_places(selected_place)
-        rec_text = "Top recommended similar bars to **{}**:\n- ".format(selected_place) + "\n- ".join(recs)
-
+        rec_text = "### Recommended bars similar to **{}**:\n- ".format(selected_place) + "\n- ".join(recs)
     else:
-        rec_text = "Select a bar to see recommendations."
+        rec_text = "Select a bar from the dropdown to see similar places."
 
     return fig1, fig2, fig3, dcc.Markdown(rec_text)
 
 if __name__ == '__main__':
+    print("Launching dashboard on http://127.0.0.1:8050 ...")
     app.run(debug=True)
