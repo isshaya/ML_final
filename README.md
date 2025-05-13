@@ -44,6 +44,9 @@ To understand how similar two businesses are based on their reviews, we then use
 ```cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)```.
 This code created a square matrix where each cell [i][j] tells how similar business i is to business j. This matrix formed the foundation for a content-based recommendation system, meaning for any bar, we could now find others with similar review language and suggest them to users.
 
+Visualizing the Cosine Similarity matrix:
+![e146511e-95f7-4751-9862-211eb831690b](https://github.com/user-attachments/assets/f0c5e24e-e85a-4f9b-a5ce-d9d216c6a549)
+
 
 **4. Word2Vec Vectorization**
 
@@ -68,7 +71,12 @@ We created the function document_vector which takes a tokenized document and ret
 
 Using the function we transform each document into a single numeric vector using the Word2Vec model and stack them into a 2D array, ```np.array([document_vector(tokens) for tokens in df['tokens']])```.  This would allow for future ML tasks like classification or clustering. 
 
+Testing our Word2Vec Model (seems to work well):
+![6e5919f5-e97a-4db7-b8c9-8cb05c534bfb](https://github.com/user-attachments/assets/e0f8a147-037f-42a1-b2ed-be4509c38330)
+
+
 After this, we convert the resulting vector into a DataFrame and reset the index of the original DataFrame to ensure alignment with the new Word2Vec DataFrame, so we can combine the original text data with the Word2Vec features. This results in a complete dataset where each document is represented by its original information plus its associated Word2Vec vectors.
+
 
 **5. LDA Modelling**
 
@@ -150,6 +158,7 @@ We implemented graph-based recommendations using Personalized PageRank on the se
 
 For new users without any review history, we implemented a fallback recommendation strategy using graph-based degree centrality. This method recommends bars that are most semantically connected in the semantic graph, those mentioned across multiple topics and keywords. These bars are likely to be well-known, diverse, or thematically rich, making them safe and informative first suggestions for cold-start scenarios.
 
+![c420ac2b-afb5-49e5-8ccc-2646e98ba261](https://github.com/user-attachments/assets/8ec4d079-11cb-4ac6-87fc-ebb3ba7ab282)
 
 
 
