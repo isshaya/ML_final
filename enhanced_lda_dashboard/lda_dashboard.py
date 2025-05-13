@@ -121,7 +121,7 @@ def update_graphs(selected_place):
 
     if selected_place:
         recs = recommend_places(selected_place)
-        rec_text = "### Recommended bars similar to **{}**:\n- ".format(selected_place) + "\\n- ".join(recs)
+        rec_text = "### Recommended bars similar to **{}**:\n- ".format(selected_place) + "\n- ".join(recs)
     else:
         rec_text = "Select a bar from the dropdown to see similar places."
 
