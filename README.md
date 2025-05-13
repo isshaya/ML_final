@@ -92,7 +92,15 @@ Parameters:
 - random_state=42: A seed for random number generation, ensuring that the results are reproducible.
 - per_word_topics=True: Allows LDA to generate a topic distribution for each word in the corpus, which can help improve the model’s precision.
 
+We decided on 10 topics, even though 5 was recommended after graphing coherence across topic numbers -- we did this for the sake of explainability, and being able to properly visualize each bar and topic in our findings. 
+
+![image](https://github.com/user-attachments/assets/129dcf9e-4e6d-4a22-935f-f25450de6c8e)
+
+
 After training the LDA model, we displayed the top words for each LDA topic in two ways. First, we iterated through the topics individually and retrieved the top NUM_TOP_WORDS for each topic, offering a clear and easily readable view of each topic. Then, we used the lda_model.show_topics() method, which returns all topics. This method outputs each topic as a combination of its top words along with their associated weights.
+
+![image](https://github.com/user-attachments/assets/d6d031bf-ae7c-4968-8b2f-b26c6f62fb43)
+
 
 Lastly, we assigned a dominant topic to each document using the get_dominant_topic function we defined. The code sorts the topics in each review and selects the topic with the highest probability as the dominant topic. This dominant topic is then added as a new column in the original DataFrame, allowing us to categorize each review by its most relevant topic. For example, one topic might revolve around food quality, while another centers on service or ambiance.
 
